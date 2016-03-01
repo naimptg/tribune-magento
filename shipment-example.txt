@@ -1,0 +1,41 @@
+We have listed 4 steps to update orders using magento API. 
+
+
+$host = "store.baltimoresun.com"; //our online shop url
+$client = new SoapClient("http://".$host."/api/soap/?wsdl"); //soap handle
+$apiuser= '<user name here>'; //webservice user login
+$apikey = '<password here>'; //webservice user pass
+$vendorid='<Vendor ID here>'; 
+$ session = $client->login($apiuser, $apikey); //we do login
+
+1) To  create partial shipment for specific order 
+
+$orderIncrementId = '100009939';
+$itemsQty = array('44862' => '1');
+$ result = $client->call($session,'sales_order_shipment.create',array($orderIncrementId,$itemsQty),'shipment created for order item NO:- 44861');
+
+Comment:- Above api call will generate new partial shipment for order number “100009939” and Item number “44862”
+
+
+2) To  create full Shipment for specific order 
+
+$orderIncrementId = '100009939';
+$ result = $client->call($session,'sales_order_shipment.create', $orderIncrementId);
+
+Comment:- Above api call will generate new shipment for order number “100009939”
+
+
+3)  To add Tracking code for already generated shipment
+
+$ShipmentId = '100013069';
+$result = $client->call($session, 'sales_order_shipment.addTrack', array('shipmentIncrementId' => $ShipmentId , 'carrier' => 'ups', 'title' => 'tracking title', 'trackNumber' => '123123'));
+
+Comment:- Above api call will add tracking number on shipment id “'100013069'”
+
+
+4)  To add  Comment for  already generated shipment 
+
+$ShipmentId = '100013069';
+$result = $client->call($session, 'sales_order_shipment.addComment', array('shipmentIncrementId' => $ShipmentId , 'comment' => 'comment for the shipment', 'email' => null));
+
+Comment:- Above api call will add comment on shipment id “'100013069'”
